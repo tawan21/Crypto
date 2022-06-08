@@ -23,7 +23,7 @@ def app():
         dec = st.button('SELL')
     n = len(options)
     st.text('')
-    if opt[:4] not in st.session_state:
+    if n > 0 and opt[:4] not in st.session_state:
         st.session_state[opt[:4]] = 0
     if inc:
         st.session_state[opt[:4]] += 1
@@ -32,6 +32,8 @@ def app():
         st.session_state[opt[:4]] -= 1
         st.session_state[opt] += float(df[df.symbol == opt].weightedAvgPrice)
     col1, col2 = st.columns(2)
+    if n == 0:
+        st.warning('You have not added any Coins!')
     if n >= 1:
         if options[0] not in st.session_state:
             st.session_state[options[0]] = 0
@@ -64,5 +66,6 @@ def app():
             col2.metric(options[5], df[df.symbol == options[5]].weightedAvgPrice, st.session_state[options[5]])
     if n > 6:
         st.warning('You have added the maximum of Six Coins!')
-    with col2:
-        st.metric('Pending SELL Calls', st.session_state[opt[:4]])
+    if n > 0:
+        with col2:
+            st.metric('Pending SELL Calls', st.session_state[opt[:4]])
